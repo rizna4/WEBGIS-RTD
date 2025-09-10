@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web GIS with 3D Point Cloud</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <style>
+        #map { height: 400px; }
+        #potree_container { width: 100%; height: 600px; }
+    </style>
+</head>
+<body>
+    <h2>Web GIS Map (Leaflet)</h2>
+    <div id="map"></div>
+
+    <h2>3D Point Cloud Viewer (Potree)</h2>
+    <iframe id="potree_container" src="potree_viewer.html"></iframe>
+
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([0, 0], 2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Sample GeoJSON layer
+        var geojsonFeature = {
+            "type": "Feature",
+            "geometry": {
+                "type": "Point",
+                "coordinates": [51.52689, 25.31829]
+            },
+            "properties": {
+                "name": "Sample Point",
+                "popupContent": "This is a sample location."
+            }
+        };
+
+        L.geoJSON(geojsonFeature, {
+            onEachFeature: function (feature, layer) {
+                if (feature.properties && feature.properties.popupContent) {
+                    layer.bindPopup(feature.properties.popupContent);
+                }
+            }
+        }).addTo(map);
+    </script>
+</body>
+</html>
